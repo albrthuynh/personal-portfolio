@@ -1,4 +1,4 @@
-# Albert Huynh - Personal Portfolio
+# Personal Portfolio
 
 A modern, interactive portfolio website showcasing my work as a full-stack developer and AI enthusiast.
 
