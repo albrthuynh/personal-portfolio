@@ -349,7 +349,7 @@ export default function Portfolio() {
                     {/* Skills floating sidebar */}
                     <div className="absolute right-8 top-1/2 transform -translate-y-1/2 hidden xl:block">
                         <div className="space-y-2">
-                            {skills.slice(0).map((skill, index) => (
+                            {skills.slice(11).map((skill, index) => (
                                 <div
                                     key={skill}
                                     className="bg-gray-800/50 backdrop-blur-sm px-3 py-1 rounded-full text-sm text-gray-300 transform hover:scale-105 transition-transform"
