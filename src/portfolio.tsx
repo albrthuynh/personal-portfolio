@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react"
 import { Canvas, useFrame } from "@react-three/fiber"
-import { OrbitControls, Environment, ContactShadows, useGLTF } from "@react-three/drei"
+import { OrbitControls, Environment, ContactShadows } from "@react-three/drei"
 import { Button } from "@/ui/button"
 import { Card, CardContent } from "@/ui/card"
 import { Badge } from "@/ui/badge"
