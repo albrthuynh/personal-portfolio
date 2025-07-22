@@ -437,7 +437,7 @@ export default function Portfolio() {
                         <Button
                             size="lg"
                             className="bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:from-blue-600 hover:to-purple-700 border-0 transform hover:scale-105 transition-transform"
-                            onClick={() => window.open('mailto:albertbhuynh@gmail.com', '_blank')}
+                            onClick={() => window.open('mailto:albrthuynh@gmail.com', '_blank')}
                         >
                             <Mail size={20} className="mr-2" />
                             Email Me
