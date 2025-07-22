@@ -4,7 +4,6 @@ A modern, interactive portfolio website showcasing my work as a full-stack devel
 
 ## Features
 
-- **Interactive 3D Model**: Built with Three.js and React Three Fiber
 - **Responsive Design**: Optimized for all devices and screen sizes
 - **Modern Tech Stack**: React, TypeScript, Tailwind CSS, and Vite
 - **Live Projects**: Links to my real projects including Akknoledge, NBAIQ, and Social Media Assistant
@@ -22,5 +21,3 @@ A modern, interactive portfolio website showcasing my work as a full-stack devel
 - **Akknoledge**: Study group platform with 850+ users
 - **NBAIQ**: Machine learning NBA predictions platform
 - **Social Media Assistant**: AI-powered Reddit post predictor
-
-Built with ❤️ by Albert Huynh
