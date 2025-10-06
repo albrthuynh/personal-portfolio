@@ -10,6 +10,7 @@ import { Github, Linkedin, Mail, ExternalLink, Menu, X, ArrowDown, Code, Palette
 import type * as THREE from "three"
 import { GLTFCharacter } from "./GLTFCharacter"
 import { motion, useInView, useScroll, useTransform, AnimatePresence } from "framer-motion"
+import LoadingScreen from "./LoadingScreen"
 
 // Floating orb component
 function FloatingOrb({
@@ -130,6 +131,7 @@ const FloatingParticles = () => {
 export default function Portfolio() {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+    const [isLoading, setIsLoading] = useState(true)
     
     // Refs for scroll animations
     const heroRef = useRef(null)
@@ -137,16 +139,25 @@ export default function Portfolio() {
     const projectsRef = useRef(null)
     const contactRef = useRef(null)
     
-    // Scroll progress for parallax effects
+    // Enhanced scroll progress for advanced parallax effects
     const { scrollY } = useScroll()
     const heroParallax = useTransform(scrollY, [0, 1000], [0, -200])
     const aboutParallax = useTransform(scrollY, [500, 1500], [0, -100])
     
-    // In view checks for animations
-    const heroInView = useInView(heroRef, { once: true, margin: "-10%" })
-    const aboutInView = useInView(aboutRef, { once: true, margin: "-20%" })
-    const projectsInView = useInView(projectsRef, { once: true, margin: "-20%" })
-    const contactInView = useInView(contactRef, { once: true, margin: "-20%" })
+    // Apple-style perspective transforms
+    const heroPerspective = useTransform(scrollY, [0, 500], [0, -50])
+    const heroScale = useTransform(scrollY, [0, 500], [1, 0.9])
+    const heroOpacity = useTransform(scrollY, [0, 500], [1, 0.3])
+    
+    // Project cards depth effect
+    const projectsY = useTransform(scrollY, [1500, 2500], [100, -50])
+    const projectsRotate = useTransform(scrollY, [1500, 2500], [5, 0])
+    
+    // In view checks for animations - only trigger if loading is complete
+    const heroInView = useInView(heroRef, { once: true, margin: "-10%" }) && !isLoading
+    const aboutInView = useInView(aboutRef, { once: true, margin: "-20%" }) && !isLoading
+    const projectsInView = useInView(projectsRef, { once: true, margin: "-20%" }) && !isLoading
+    const contactInView = useInView(contactRef, { once: true, margin: "-20%" }) && !isLoading
 
     useEffect(() => {
         const handleMouseMove = (e: MouseEvent) => {
@@ -198,7 +209,21 @@ export default function Portfolio() {
     ]
 
     return (
-        <div className="min-h-screen bg-black text-white overflow-x-hidden">
+        <>
+            {/* Loading Screen */}
+            <AnimatePresence mode="wait">
+                {isLoading && (
+                    <LoadingScreen onLoadingComplete={() => setIsLoading(false)} />
+                )}
+            </AnimatePresence>
+
+            {/* Main Portfolio Content */}
+            <motion.div 
+                className="min-h-screen bg-black text-white overflow-x-hidden"
+                initial={{ opacity: 0 }}
+                animate={!isLoading ? { opacity: 1 } : { opacity: 0 }}
+                transition={{ duration: 0.5 }}
+            >
             {/* Floating particles for ambiance */}
             <FloatingParticles />
             
@@ -266,7 +291,7 @@ export default function Portfolio() {
             <motion.nav 
                 className="fixed top-0 w-full z-50 bg-black/80 backdrop-blur-md border-b border-gray-800"
                 initial={{ y: -100, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
+                animate={!isLoading ? { y: 0, opacity: 1 } : { y: -100, opacity: 0 }}
                 transition={{ duration: 1, ease: "easeOut" }}
             >
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -274,7 +299,7 @@ export default function Portfolio() {
                         <motion.div 
                             className="text-xl font-bold"
                             initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
+                            animate={!isLoading ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
                             transition={{ delay: 0.5, duration: 0.8 }}
                         >
                             Albert's Portfolio
@@ -285,7 +310,7 @@ export default function Portfolio() {
                             className="hidden md:flex space-x-8"
                             variants={containerVariants}
                             initial="hidden"
-                            animate="visible"
+                            animate={!isLoading ? "visible" : "hidden"}
                         >
                             {['Home', 'About', 'Projects', 'Contact'].map((item) => (
                                 <motion.button
@@ -378,29 +403,39 @@ export default function Portfolio() {
                 </div>
             </motion.nav>
 
-            {/* Enhanced Hero Section with 3D Character */}
+            {/* Enhanced Hero Section with 3D Character and Apple-style depth */}
             <motion.section 
                 ref={heroRef}
                 id="home" 
                 className="min-h-screen flex items-center justify-center px-4 relative pt-20 md:pt-0"
-                style={{ y: heroParallax }}
+                style={{ 
+                    y: heroParallax,
+                    scale: heroScale,
+                    opacity: heroOpacity,
+                    perspective: "1000px",
+                }}
             >
                 <div className="max-w-7xl mx-auto w-full h-full">
                     {/* Mobile: Column layout, Desktop: Grid layout */}
                     <div className="flex flex-col lg:grid lg:grid-cols-3 gap-6 lg:gap-8 items-center h-full">
-                        {/* Left side - Text content with enhanced animations */}
+                        {/* Left side - Text content with enhanced 3D animations */}
                         <motion.div 
                             className="w-full lg:col-span-1 relative z-10 order-1"
                             initial={{ opacity: 0, x: -100 }}
                             animate={heroInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -100 }}
                             transition={{ duration: 1.2, delay: 0.3 }}
+                            style={{
+                                y: heroPerspective,
+                                rotateY: mousePosition.x * 2,
+                                transformStyle: "preserve-3d",
+                            }}
                         >
                             <motion.div
                                 initial={{ scale: 0.8, opacity: 0 }}
                                 animate={heroInView ? { scale: 1, opacity: 1 } : { scale: 0.8, opacity: 0 }}
                                 transition={{ duration: 1, delay: 0.6 }}
                             >
-                                <Card className="bg-black/80 backdrop-blur-md border-gray-800 p-6 md:p-8 hover:border-gray-600 transition-all duration-500">
+                                <Card className="bg-black/40 backdrop-blur-xl border-gray-700/50 p-6 md:p-8 hover:border-gray-500/50 transition-all duration-500 shadow-2xl hover:shadow-blue-500/20">
                                     <div className="space-y-4 md:space-y-6">
                                         <motion.div 
                                             className="relative"
@@ -495,17 +530,25 @@ export default function Portfolio() {
                             </motion.div>
                         </motion.div>
 
-                        {/* Right side - Enhanced 3D Character */}
+                        {/* Right side - Enhanced 3D Character with depth */}
                         <motion.div 
                             className="w-full lg:col-span-2 relative order-2"
                             initial={{ opacity: 0, x: 100, rotateY: -20 }}
                             animate={heroInView ? { opacity: 1, x: 0, rotateY: 0 } : { opacity: 0, x: 100, rotateY: -20 }}
                             transition={{ duration: 1.5, delay: 0.8 }}
+                            style={{
+                                rotateY: mousePosition.x * -3,
+                                rotateX: mousePosition.y * 2,
+                                transformStyle: "preserve-3d",
+                            }}
                         >
                             <motion.div 
-                                className="h-64 sm:h-80 md:h-96 lg:h-[600px] bg-gradient-to-br from-gray-900 to-black rounded-2xl md:rounded-3xl overflow-hidden relative"
+                                className="h-64 sm:h-80 md:h-96 lg:h-[600px] bg-gradient-to-br from-gray-900/80 to-black/80 backdrop-blur-xl rounded-2xl md:rounded-3xl overflow-hidden relative border border-gray-700/30 shadow-2xl"
                                 whileHover={{ scale: 1.02 }}
                                 transition={{ duration: 0.3 }}
+                                style={{
+                                    transform: "translateZ(50px)",
+                                }}
                             >
                                 <Canvas camera={{ position: [0, 5, 5], fov: 50 }}>
                                     <ambientLight intensity={0.5} />
@@ -661,7 +704,7 @@ export default function Portfolio() {
                                 whileHover={{ scale: 1.02, rotateY: 2 }}
                                 transition={{ duration: 0.3 }}
                             >
-                                <Card className="bg-gray-900/50 border-gray-800 backdrop-blur-sm transform lg:translate-x-8 hover:border-gray-600 transition-all duration-500">
+                                <Card className="bg-gray-900/30 backdrop-blur-xl border-gray-700/40 transform lg:translate-x-8 hover:border-gray-500/60 transition-all duration-500 shadow-2xl hover:shadow-blue-500/20">
                                     <CardContent className="p-8">
                                         <div className="flex items-start space-x-4">
                                             <motion.div 
@@ -688,7 +731,7 @@ export default function Portfolio() {
                                 whileHover={{ scale: 1.02, rotateY: -2 }}
                                 transition={{ duration: 0.3 }}
                             >
-                                <Card className="bg-gray-900/50 border-gray-800 backdrop-blur-sm transform lg:-translate-x-4 hover:border-gray-600 transition-all duration-500">
+                                <Card className="bg-gray-900/30 backdrop-blur-xl border-gray-700/40 transform lg:-translate-x-4 hover:border-gray-500/60 transition-all duration-500 shadow-2xl hover:shadow-green-500/20">
                                     <CardContent className="p-8">
                                         <div className="flex items-start space-x-4">
                                             <motion.div 
@@ -715,7 +758,7 @@ export default function Portfolio() {
                                 whileHover={{ scale: 1.02, rotateY: 3 }}
                                 transition={{ duration: 0.3 }}
                             >
-                                <Card className="bg-gray-900/50 border-gray-800 backdrop-blur-sm transform lg:translate-x-12 hover:border-gray-600 transition-all duration-500">
+                                <Card className="bg-gray-900/30 backdrop-blur-xl border-gray-700/40 transform lg:translate-x-12 hover:border-gray-500/60 transition-all duration-500 shadow-2xl hover:shadow-orange-500/20">
                                     <CardContent className="p-8">
                                         <div className="flex items-start space-x-4">
                                             <motion.div 
@@ -787,11 +830,16 @@ export default function Portfolio() {
                 </div>
             </motion.section>
 
-            {/* Enhanced Projects Section with stunning animations */}
+            {/* Enhanced Projects Section with stunning animations and depth */}
             <motion.section 
                 ref={projectsRef}
                 id="projects" 
                 className="py-32 px-4 bg-gradient-to-b from-black to-gray-950"
+                style={{
+                    y: projectsY,
+                    rotateX: projectsRotate,
+                    transformStyle: "preserve-3d",
+                }}
             >
                 <div className="max-w-7xl mx-auto">
                     <motion.div 
@@ -837,8 +885,12 @@ export default function Portfolio() {
                                 transition={{ duration: 0.3 }}
                                 className={`transform ${index === 0 ? "md:col-span-2 lg:col-span-1" : ""
                                     } ${index === 1 ? "lg:translate-y-8" : ""} ${index === 2 ? "lg:-translate-y-4" : ""}`}
+                                style={{
+                                    transformStyle: "preserve-3d",
+                                    rotateY: mousePosition.x * (index % 2 === 0 ? 2 : -2),
+                                }}
                             >
-                                <Card className="bg-gray-900/50 border-gray-800 hover:border-gray-600 transition-all duration-500 group backdrop-blur-sm h-full">
+                                <Card className="bg-gray-900/30 backdrop-blur-xl border-gray-700/40 hover:border-gray-500/60 transition-all duration-500 group h-full shadow-2xl hover:shadow-purple-500/20">
                                     <CardContent className="p-0 h-full flex flex-col">
                                         {/* Enhanced gradient header with floating elements */}
                                         <motion.div 
@@ -1112,19 +1164,20 @@ export default function Portfolio() {
             <motion.footer 
                 className="py-8 px-4 border-t border-gray-800 relative"
                 initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+                animate={!isLoading ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
                 transition={{ duration: 1, delay: 1 }}
             >
                 <div className="max-w-6xl mx-auto text-center text-gray-400">
                     <motion.p
                         initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
+                        animate={!isLoading ? { opacity: 1 } : { opacity: 0 }}
                         transition={{ delay: 1.5 }}
                     >
                         &copy; 2025 Albert Huynh. All rights reserved.
                     </motion.p>
                 </div>
             </motion.footer>
-        </div>
+        </motion.div>
+        </>
     )
 }
