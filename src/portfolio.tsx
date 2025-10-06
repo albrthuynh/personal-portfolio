@@ -136,6 +136,7 @@ export default function Portfolio() {
     // Refs for scroll animations
     const heroRef = useRef(null)
     const aboutRef = useRef(null)
+    const experienceRef = useRef(null)
     const projectsRef = useRef(null)
     const contactRef = useRef(null)
     
@@ -143,6 +144,7 @@ export default function Portfolio() {
     const { scrollY } = useScroll()
     const heroParallax = useTransform(scrollY, [0, 1000], [0, -200])
     const aboutParallax = useTransform(scrollY, [500, 1500], [0, -100])
+    const experienceParallax = useTransform(scrollY, [1200, 2000], [0, -80])
     
     // Apple-style perspective transforms
     const heroPerspective = useTransform(scrollY, [0, 500], [0, -50])
@@ -156,6 +158,7 @@ export default function Portfolio() {
     // In view checks for animations - only trigger if loading is complete
     const heroInView = useInView(heroRef, { once: true, margin: "-10%" }) && !isLoading
     const aboutInView = useInView(aboutRef, { once: true, margin: "-20%" }) && !isLoading
+    const experienceInView = useInView(experienceRef, { once: true, margin: "-20%" }) && !isLoading
     const projectsInView = useInView(projectsRef, { once: true, margin: "-20%" }) && !isLoading
     const contactInView = useInView(contactRef, { once: true, margin: "-20%" }) && !isLoading
 
@@ -182,6 +185,41 @@ export default function Portfolio() {
         "Python",
         "Tailwind CSS",
         "Git",
+    ]
+
+    const experiences = [
+        {
+            company: "CarbonCopies Foundation",
+            role: "Software Engineering Intern",
+            period: "2024",
+            description: "Contributed to cutting-edge research and development in whole brain emulation technology.",
+            logo: "/logos/carboncopy.png", // You'll need to add this logo
+            color: "from-blue-500 to-cyan-600",
+        },
+        {
+            company: "Concitor Transformation Group",
+            role: "Software Engineering Intern",
+            period: "2023",
+            description: "Developed enterprise software solutions and worked on digital transformation projects.",
+            logo: "/logos/concitor.png", // You'll need to add this logo
+            color: "from-purple-500 to-pink-600",
+        },
+        {
+            company: "Discovery Partners Institute",
+            role: "Summer Tech Intern",
+            period: "2023",
+            description: "Worked on innovative technology projects focused on research and development.",
+            logo: "/logos/dpi.png", // You'll need to add this logo
+            color: "from-green-500 to-emerald-600",
+        },
+        {
+            company: "UIC",
+            role: "Mobile App Developer Intern",
+            period: "2022",
+            description: "Developed mobile applications for the University of Illinois Chicago community.",
+            logo: "/logos/uic.png", // You'll need to add this logo
+            color: "from-red-500 to-orange-600",
+        },
     ]
 
     const projects = [
@@ -312,7 +350,7 @@ export default function Portfolio() {
                             initial="hidden"
                             animate={!isLoading ? "visible" : "hidden"}
                         >
-                            {['Home', 'About', 'Projects', 'Contact'].map((item) => (
+                            {['Home', 'About', 'Experience', 'Projects', 'Contact'].map((item) => (
                                 <motion.button
                                     key={item}
                                     variants={itemVariants}
@@ -381,7 +419,7 @@ export default function Portfolio() {
                                     initial="hidden"
                                     animate="visible"
                                 >
-                                    {['Home', 'About', 'Projects', 'Contact'].map((item) => (
+                                    {['Home', 'About', 'Experience', 'Projects', 'Contact'].map((item) => (
                                         <motion.button 
                                             key={item}
                                             variants={itemVariants}
@@ -826,6 +864,96 @@ export default function Portfolio() {
                                 </motion.div>
                             ))}
                         </motion.div>
+                    </motion.div>
+                </div>
+            </motion.section>
+
+            {/* Experience Section */}
+            <motion.section 
+                ref={experienceRef}
+                id="experience" 
+                className="py-32 px-4 bg-gradient-to-b from-black to-gray-950 relative"
+                style={{ y: experienceParallax }}
+            >
+                <div className="max-w-7xl mx-auto">
+                    <motion.div 
+                        className="text-center mb-16"
+                        initial={{ opacity: 0, y: 50 }}
+                        animate={experienceInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
+                        transition={{ duration: 1 }}
+                    >
+                        <motion.h2 
+                            className="text-5xl font-bold mb-6 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent"
+                            initial={{ backgroundPosition: "0% 50%" }}
+                            animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
+                            transition={{ duration: 3, repeat: Infinity }}
+                        >
+                            Experience
+                        </motion.h2>
+                        <motion.div 
+                            className="w-24 h-1 bg-gradient-to-r from-purple-500 to-pink-600 mx-auto"
+                            initial={{ width: 0 }}
+                            animate={experienceInView ? { width: "6rem" } : { width: 0 }}
+                            transition={{ duration: 1, delay: 0.5 }}
+                        ></motion.div>
+                    </motion.div>
+
+                    {/* Experience Cards Grid */}
+                    <motion.div 
+                        className="grid md:grid-cols-2 gap-8"
+                        variants={containerVariants}
+                        initial="hidden"
+                        animate={experienceInView ? "visible" : "hidden"}
+                    >
+                        {experiences.map((experience, index) => (
+                            <motion.div
+                                key={experience.company}
+                                variants={cardVariants}
+                                whileHover={{ scale: 1.03, rotateY: 2 }}
+                                transition={{ duration: 0.3 }}
+                            >
+                                <Card className="bg-gray-900/30 backdrop-blur-xl border-gray-700/40 hover:border-gray-500/60 transition-all duration-500 h-full shadow-2xl hover:shadow-purple-500/20">
+                                    <CardContent className="p-8">
+                                        {/* Company Logo & Header */}
+                                        <div className="flex items-start gap-4 mb-4">
+                                            <motion.div 
+                                                className={`w-16 h-16 bg-gradient-to-r ${experience.color} rounded-xl flex items-center justify-center overflow-hidden`}
+                                                whileHover={{ rotate: 360 }}
+                                                transition={{ duration: 0.6 }}
+                                            >
+                                                {/* Placeholder for logo - replace with actual image */}
+                                                <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center">
+                                                    <Code className="text-white" size={24} />
+                                                </div>
+                                            </motion.div>
+                                            <div className="flex-1">
+                                                <h3 className="text-xl font-semibold text-white mb-1">
+                                                    {experience.company}
+                                                </h3>
+                                                <p className="text-sm text-gray-400">{experience.period}</p>
+                                            </div>
+                                        </div>
+
+                                        {/* Role */}
+                                        <motion.div
+                                            className="mb-4"
+                                            initial={{ opacity: 0 }}
+                                            animate={{ opacity: 1 }}
+                                            transition={{ delay: index * 0.2 }}
+                                        >
+                                            <Badge variant="secondary" className="bg-gray-800 text-white mb-3">
+                                                {experience.role}
+                                            </Badge>
+                                        </motion.div>
+
+                                        {/* Description */}
+                                        <p className="text-gray-300 text-sm leading-relaxed">
+                                            {experience.description}
+                                        </p>
+                                    </CardContent>
+                                </Card>
+                            </motion.div>
+                        ))}
                     </motion.div>
                 </div>
             </motion.section>
