@@ -11,6 +11,10 @@ import type * as THREE from "three"
 import { GLTFCharacter } from "./GLTFCharacter"
 import { motion, useInView, useScroll, useTransform, AnimatePresence } from "framer-motion"
 import LoadingScreen from "./LoadingScreen"
+import carbonCopiesLogo from "./pics/carboncopieslogo.png"
+import ctgLogo from "./pics/CTGLogo.avif"
+import dpiLogo from "./pics/DPILogo.png"
+import uicLogo from "./pics/uiclogo.png"
 
 // Floating orb component
 function FloatingOrb({
@@ -191,33 +195,33 @@ export default function Portfolio() {
         {
             company: "CarbonCopies Foundation",
             role: "Software Engineering Intern",
-            period: "2024",
-            description: "Contributed to cutting-edge research and development in whole brain emulation technology.",
-            logo: "/logos/carboncopy.png", // You'll need to add this logo
+            period: "April 2025 - Present",
+            description: "Contributed to the development and optimization of neuro-engineering software for mind uploading, brain emulation, and computational neuroscience. Improved C++/Python data pipelines with caching (runtime reduced 71%, 26 → 7.5 min) and SYCL-based rendering optimizations that accelerated Electron Microscopy visualization. Built a centralized configuration distributor for bi-directional API communication, cutting integration issues by 70%, and created Python monitoring dashboards (CPU/disk/Matplotlib) featured in Carbon Copies Foundation’s grant proposal.",
+            logo: carbonCopiesLogo, 
             color: "from-blue-500 to-cyan-600",
         },
         {
             company: "Concitor Transformation Group",
             role: "Software Engineering Intern",
-            period: "2023",
-            description: "Developed enterprise software solutions and worked on digital transformation projects.",
-            logo: "/logos/concitor.png", // You'll need to add this logo
+            period: "April 2025 - August 2025",
+            description: "Developed an AI-powered social media assistant that detects viral Reddit posts in real time and generates contextual comment suggestions using OpenAI API. Trained a TensorFlow.js neural network on 7,500+ Reddit posts (91%+ validation accuracy) and built a Node.js + Firebase pipeline that scrapes and processes 250+ posts per subreddit per request. Designed and implemented the entire product end-to-end—owning both the frontend and backend—integrating the ML models into a responsive UI and ensuring smooth communication between the UI, APIs, and data pipeline.",
+            logo: ctgLogo,             
             color: "from-purple-500 to-pink-600",
         },
         {
             company: "Discovery Partners Institute",
             role: "Summer Tech Intern",
-            period: "2023",
-            description: "Worked on innovative technology projects focused on research and development.",
-            logo: "/logos/dpi.png", // You'll need to add this logo
+            period: "July 2023 - August 2023",
+            description: "Worked at Discovery Partners Institute with A Better Chicago to develop an AI-powered chatbot designed to assess company grant eligibility. Through optimization, enhanced the chatbot’s decision-making accuracy by 25%, improving its effectiveness in identifying qualified applicants. Designed and built a full-stack application using React Native, rapidly gaining proficiency in the framework within three weeks while implementing scalable and user-friendly features. Additionally, retrieved and processed complex crime data from a JSON file to generate a bar chart visualizing crime severity by zip code for the React Native project.",
+            logo: dpiLogo, 
             color: "from-green-500 to-emerald-600",
         },
         {
             company: "UIC",
             role: "Mobile App Developer Intern",
-            period: "2022",
-            description: "Developed mobile applications for the University of Illinois Chicago community.",
-            logo: "/logos/uic.png", // You'll need to add this logo
+            period: "July 2022 - August 2022",
+            description: "Collaborated with a team of 3 to design and develop an iOS application using Swift and SwiftUI that provides users with detailed insights such as the PH level into their wound condition. Built app functionality by integrating Google Sign-In and Firebase for authentication, email-based signup/login, and email verification for security. Worked closely with teammates to connect frontend UI with bluetooth, ensuring seamless data flow and a secure, responsive user experience.",
+            logo: uicLogo, 
             color: "from-red-500 to-orange-600",
         },
     ]
@@ -225,7 +229,7 @@ export default function Portfolio() {
     const projects = [
         {
             title: "Akknoledge",
-            description: "Full-stack study group platform with over 850 users which connects students to other study partners within their own university. Built with React, Node.js, TypeScript, and Firebase.",
+            description: "Full-stack study group platform with over 1400 signed up users which connects students to other study partners within their own university. Built with React, Node.js, TypeScript, and Firebase.",
             tech: ["React", "TypeScript", "Node.js", "Firebase", "Tailwind CSS"],
             link: "https://www.akknoledge.com/",
             color: "from-blue-500 to-purple-600",
@@ -917,14 +921,15 @@ export default function Portfolio() {
                                         {/* Company Logo & Header */}
                                         <div className="flex items-start gap-4 mb-4">
                                             <motion.div 
-                                                className={`w-16 h-16 bg-gradient-to-r ${experience.color} rounded-xl flex items-center justify-center overflow-hidden`}
-                                                whileHover={{ rotate: 360 }}
-                                                transition={{ duration: 0.6 }}
+                                                className={`${experience.company === 'CarbonCopies Foundation' ? 'w-24 h-12' : 'w-16 h-12'} flex items-center justify-center overflow-hidden`}
+                                                whileHover={{ scale: 1.1 }}
+                                                transition={{ duration: 0.3 }}
                                             >
-                                                {/* Placeholder for logo - replace with actual image */}
-                                                <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center">
-                                                    <Code className="text-white" size={24} />
-                                                </div>
+                                                <img 
+                                                    src={experience.logo} 
+                                                    alt={`${experience.company} logo`}
+                                                    className="w-full h-full object-contain"
+                                                />
                                             </motion.div>
                                             <div className="flex-1">
                                                 <h3 className="text-xl font-semibold text-white mb-1">
