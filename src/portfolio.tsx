@@ -1,44 +1,24 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
-import { Canvas, useFrame } from "@react-three/fiber"
-import { OrbitControls, Environment, ContactShadows } from "@react-three/drei"
 import { Button } from "@/ui/button"
 import { Card, CardContent } from "@/ui/card"
 import { Badge } from "@/ui/badge"
 import { Github, Linkedin, Mail, ExternalLink, Menu, X, ArrowDown, Code, Palette, Zap } from "lucide-react"
-import type * as THREE from "three"
-import { GLTFCharacter } from "./GLTFCharacter"
 import { motion, useInView, useScroll, useTransform, AnimatePresence } from "framer-motion"
 import LoadingScreen from "./LoadingScreen"
+import ImageCarousel from "./ImageCarousel"
 import carbonCopiesLogo from "./pics/carboncopieslogo.png"
 import ctgLogo from "./pics/CTGLogo.avif"
 import dpiLogo from "./pics/DPILogo.png"
 import uicLogo from "./pics/uiclogo.png"
-
-// Floating orb component
-function FloatingOrb({
-    position,
-    color,
-    size = 1,
-}: { position: [number, number, number]; color: string; size?: number }) {
-    const meshRef = useRef<THREE.Mesh>(null)
-
-    useFrame((state) => {
-        if (meshRef.current) {
-            meshRef.current.position.y = position[1] + Math.sin(state.clock.elapsedTime * 0.5) * 0.2
-            meshRef.current.rotation.x = state.clock.elapsedTime * 0.2
-            meshRef.current.rotation.y = state.clock.elapsedTime * 0.3
-        }
-    })
-
-    return (
-        <mesh ref={meshRef} position={position}>
-            <sphereGeometry args={[size, 32, 32]} />
-            <meshStandardMaterial color={color} emissive={color} emissiveIntensity={0.2} />
-        </mesh>
-    )
-}
+import professional from "./pics/professinal.JPG"
+import badminton from "./pics/badminton.JPG"
+import golf from "./pics/golf.jpg"
+import marathon from "./pics/cmarathon.JPG"
+import panel from "./pics/panel.jpg"
+import run5k from "./pics/5k.PNG"
+import boxing from './pics/box.jpg'
 
 // Animation variants for staggered effects
 const containerVariants = {
@@ -132,6 +112,75 @@ const FloatingParticles = () => {
     )
 }
 
+// Cursor Trail Component
+function CursorTrail() {
+    const [trail, setTrail] = useState<Array<{ x: number; y: number; id: number; timestamp: number }>>([])
+    const trailIdRef = useRef(0)
+    const animationFrameRef = useRef<number | undefined>(undefined)
+
+    useEffect(() => {
+        let lastTime = Date.now()
+        
+        const handleMouseMove = (e: MouseEvent) => {
+            const now = Date.now()
+            // Only add a point every 20ms to avoid too many points
+            if (now - lastTime > 20) {
+                const newPoint = {
+                    x: e.clientX,
+                    y: e.clientY,
+                    id: trailIdRef.current++,
+                    timestamp: now,
+                }
+
+                setTrail((prev) => [...prev, newPoint])
+                lastTime = now
+            }
+        }
+
+        // Remove old trail points
+        const cleanupTrail = () => {
+            const now = Date.now()
+            setTrail((prev) => prev.filter((point) => now - point.timestamp < 500)) // Keep points for 500ms
+            animationFrameRef.current = requestAnimationFrame(cleanupTrail)
+        }
+
+        window.addEventListener("mousemove", handleMouseMove)
+        animationFrameRef.current = requestAnimationFrame(cleanupTrail)
+        
+        return () => {
+            window.removeEventListener("mousemove", handleMouseMove)
+            if (animationFrameRef.current) {
+                cancelAnimationFrame(animationFrameRef.current)
+            }
+        }
+    }, [])
+
+    return (
+        <div className="fixed inset-0 pointer-events-none z-40 hidden md:block">
+            {trail.map((point) => {
+                const age = Date.now() - point.timestamp
+                const lifeProgress = age / 500 // 0 to 1 over 500ms
+                const opacity = Math.max(0, 1 - lifeProgress)
+                
+                return (
+                    <div
+                        key={point.id}
+                        className="absolute w-3 h-3 rounded-full"
+                        style={{
+                            left: point.x - 6,
+                            top: point.y - 6,
+                            background: `radial-gradient(circle, rgba(59, 130, 246, ${opacity * 0.8}), rgba(139, 92, 246, ${opacity * 0.3}))`,
+                            opacity: opacity,
+                            transform: `scale(${opacity})`,
+                            transition: 'opacity 0.1s ease-out, transform 0.1s ease-out',
+                        }}
+                    />
+                )
+            })}
+        </div>
+    )
+}
+
 export default function Portfolio() {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
@@ -189,6 +238,17 @@ export default function Portfolio() {
         "Python",
         "Tailwind CSS",
         "Git",
+    ]
+
+    // Carousel images
+    const carouselImages = [
+        professional,
+        panel,
+        marathon,
+        golf,
+        run5k,
+        badminton,
+        boxing
     ]
 
     const experiences = [
@@ -268,6 +328,9 @@ export default function Portfolio() {
             >
             {/* Floating particles for ambiance */}
             <FloatingParticles />
+            
+            {/* Cursor Trail Effect */}
+            <CursorTrail />
             
             {/* Enhanced floating background elements with parallax */}
             <motion.div 
@@ -577,39 +640,25 @@ export default function Portfolio() {
                             className="w-full lg:col-span-2 relative order-2"
                             initial={{ opacity: 0, x: 100, rotateY: -20 }}
                             animate={heroInView ? { opacity: 1, x: 0, rotateY: 0 } : { opacity: 0, x: 100, rotateY: -20 }}
-                            transition={{ duration: 1.5, delay: 0.8 }}
+                            transition={{ 
+                                duration: window.innerWidth < 768 ? 0 : 1.5, 
+                                delay: window.innerWidth < 768 ? 0 : 0.8, 
+                                ease: "easeOut" 
+                            }}
                             style={{
                                 rotateY: mousePosition.x * -3,
                                 rotateX: mousePosition.y * 2,
                                 transformStyle: "preserve-3d",
                             }}
                         >
-                            <motion.div 
+                            <div 
                                 className="h-64 sm:h-80 md:h-96 lg:h-[600px] bg-gradient-to-br from-gray-900/80 to-black/80 backdrop-blur-xl rounded-2xl md:rounded-3xl overflow-hidden relative border border-gray-700/30 shadow-2xl"
-                                whileHover={{ scale: 1.02 }}
-                                transition={{ duration: 0.3 }}
-                                style={{
-                                    transform: "translateZ(50px)",
-                                }}
                             >
-                                <Canvas camera={{ position: [0, 5, 5], fov: 50 }}>
-                                    <ambientLight intensity={0.5} />
-                                    <pointLight position={[10, 10, 10]} intensity={1} />
-                                    <spotLight position={[0, 10, 0]} angle={0.3} penumbra={1} intensity={1} />
-                                    <GLTFCharacter />
-                                    <FloatingOrb position={[-3, 1, 0]} color="#3b82f6" size={0.3} />
-                                    <FloatingOrb position={[3, -1, 1]} color="#8b5cf6" size={0.2} />
-                                    <FloatingOrb position={[0, 3, -1]} color="#10b981" size={0.25} />
-                                    <FloatingOrb position={[-1, -2, 2]} color="#f59e0b" size={0.15} />
-                                    <FloatingOrb position={[2, 2, -2]} color="#ef4444" size={0.2} />
-                                    <ContactShadows position={[0, -2, 0]} opacity={0.4} scale={10} blur={2} far={2} />
-                                    <Environment preset="studio" />
-                                    <OrbitControls enablePan={false} enableZoom={true} maxPolarAngle={Math.PI / 2} />
-                                </Canvas>
+                                <ImageCarousel images={carouselImages} />
 
                                 {/* Enhanced decorative elements with animations */}
                                 <motion.div 
-                                    className="absolute -top-6 -right-6 w-16 h-16 md:w-32 md:h-32 border-2 border-blue-500/20 rounded-full hidden sm:block"
+                                    className="absolute -top-6 -right-6 w-16 h-16 md:w-32 md:h-32 border-2 border-blue-500/20 rounded-full hidden sm:block pointer-events-none"
                                     animate={{ 
                                         rotate: 360,
                                         scale: [1, 1.1, 1],
@@ -620,7 +669,7 @@ export default function Portfolio() {
                                     }}
                                 ></motion.div>
                                 <motion.div 
-                                    className="absolute -bottom-6 -left-6 w-12 h-12 md:w-24 md:h-24 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full blur-lg opacity-30 hidden sm:block"
+                                    className="absolute -bottom-6 -left-6 w-12 h-12 md:w-24 md:h-24 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full blur-lg opacity-30 hidden sm:block pointer-events-none"
                                     animate={{
                                         scale: [1, 1.3, 1],
                                         opacity: [0.3, 0.6, 0.3],
@@ -633,7 +682,7 @@ export default function Portfolio() {
                                     }}
                                 ></motion.div>
                                 <motion.div 
-                                    className="absolute top-1/4 -left-4 w-8 h-8 md:w-16 md:h-16 border border-green-500/20 rounded-full hidden sm:block"
+                                    className="absolute top-1/4 -left-4 w-8 h-8 md:w-16 md:h-16 border border-green-500/20 rounded-full hidden sm:block pointer-events-none"
                                     animate={{
                                         y: [0, -20, 0],
                                         opacity: [0.2, 0.8, 0.2],
@@ -647,24 +696,14 @@ export default function Portfolio() {
 
                                 {/* Enhanced floating text labels */}
                                 <motion.div 
-                                    className="absolute top-4 left-4 md:top-8 md:left-8 bg-black/60 backdrop-blur-sm px-3 py-1 md:px-4 md:py-2 rounded-full border border-gray-700"
+                                    className="absolute top-4 left-4 md:top-8 md:left-8 bg-black/60 backdrop-blur-sm px-3 py-1 md:px-4 md:py-2 rounded-full border border-gray-700 pointer-events-none"
                                     initial={{ opacity: 0, y: -20 }}
                                     animate={heroInView ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }}
                                     transition={{ delay: 1.8, duration: 0.8 }}
-                                    whileHover={{ scale: 1.05 }}
                                 >
-                                    <p className="text-xs md:text-sm text-gray-300">Meet 3D Me</p>
+                                    <p className="text-xs md:text-sm text-gray-300">My Moments</p>
                                 </motion.div>
-                                <motion.div 
-                                    className="absolute bottom-4 right-4 md:bottom-8 md:right-8 bg-black/60 backdrop-blur-sm px-3 py-1 md:px-4 md:py-2 rounded-full border border-gray-700"
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={heroInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-                                    transition={{ delay: 2, duration: 0.8 }}
-                                    whileHover={{ scale: 1.05 }}
-                                >
-                                    <p className="text-xs md:text-sm text-gray-300">Interactive Experience</p>
-                                </motion.div>
-                            </motion.div>
+                            </div>
 
                             {/* Enhanced instruction text */}
                             <motion.div 
@@ -673,7 +712,7 @@ export default function Portfolio() {
                                 animate={heroInView ? { opacity: 1 } : { opacity: 0 }}
                                 transition={{ delay: 2.2, duration: 1 }}
                             >
-                                <p className="text-xs md:text-sm text-gray-400">Drag to rotate • Scroll to zoom</p>
+                                <p className="text-xs md:text-sm text-gray-400">Navigate with arrows or swipe</p>
                             </motion.div>
                         </motion.div>
                     </div>

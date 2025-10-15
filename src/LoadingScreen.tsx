@@ -42,7 +42,7 @@ export default function LoadingScreen({ onLoadingComplete }: LoadingScreenProps)
                     duration: 4,
                     repeat: Infinity,
                     ease: "easeInOut",
-                    delay: 1,
+                    delay: 0.5,
                 }}
                 style={{ bottom: "20%", right: "10%" }}
             />
@@ -89,13 +89,13 @@ export default function LoadingScreen({ onLoadingComplete }: LoadingScreenProps)
                     className="w-64 h-1 bg-gray-800 rounded-full mx-auto overflow-hidden"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    transition={{ delay: 0.7 }}
+                    transition={{ delay: 0.4 }}
                 >
                     <motion.div
                         className="h-full bg-gradient-to-r from-blue-500 to-purple-600 rounded-full"
                         initial={{ width: "0%" }}
                         animate={{ width: "100%" }}
-                        transition={{ duration: 1, delay: 0.7, ease: "easeInOut" }}
+                        transition={{ duration: 0.8, delay: 0.4, ease: "easeInOut" }}
                     />
                 </motion.div>
 
