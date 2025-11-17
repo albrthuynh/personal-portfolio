@@ -229,6 +229,20 @@ export default function Portfolio() {
         return () => window.removeEventListener("mousemove", handleMouseMove)
     }, [])
 
+    // Handle hash navigation on page load
+    useEffect(() => {
+        if (!isLoading && window.location.hash) {
+            const id = window.location.hash.substring(1) // Remove the '#'
+            const element = document.getElementById(id)
+            if (element) {
+                // Wait a bit for animations to settle
+                setTimeout(() => {
+                    element.scrollIntoView({ behavior: 'smooth' })
+                }, 100)
+            }
+        }
+    }, [isLoading])
+
     const skills = [
         "React",
         "TypeScript",
