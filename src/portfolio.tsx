@@ -419,7 +419,7 @@ export default function Portfolio() {
                                 initial="hidden"
                                 animate={!isLoading ? "visible" : "hidden"}
                             >
-                                {['Home', 'About', 'Experience', 'Projects', 'Contact'].map((item) => (
+                                {['Home', 'About', 'Experience', 'Publications', 'Projects', 'Contact'].map((item) => (
                                     <motion.button
                                         key={item}
                                         variants={itemVariants}
@@ -488,7 +488,7 @@ export default function Portfolio() {
                                         initial="hidden"
                                         animate="visible"
                                     >
-                                        {['Home', 'About', 'Experience', 'Projects', 'Contact'].map((item) => (
+                                        {['Home', 'About', 'Experience', 'Publications', 'Projects', 'Contact'].map((item) => (
                                             <motion.button
                                                 key={item}
                                                 variants={itemVariants}

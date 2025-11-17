@@ -11,7 +11,7 @@ export default function LoadingScreen({ onLoadingComplete }: LoadingScreenProps)
             initial={{ opacity: 1 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.5, delay: 1 }}
+            transition={{ duration: 0.3, delay: 0.4 }}
             onAnimationComplete={onLoadingComplete}
         >
             {/* Animated background gradients */}
@@ -53,7 +53,7 @@ export default function LoadingScreen({ onLoadingComplete }: LoadingScreenProps)
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.1 }}
+                    transition={{ duration: 0.3, delay: 0.05 }}
                 >
                     <motion.h1
                         className="text-5xl md:text-7xl font-bold mb-4 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text text-transparent"
@@ -69,7 +69,7 @@ export default function LoadingScreen({ onLoadingComplete }: LoadingScreenProps)
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.3 }}
+                    transition={{ duration: 0.3, delay: 0.1 }}
                 >
                     <p className="text-xl md:text-2xl text-gray-400 mb-2">Portfolio</p>
                 </motion.div>
@@ -78,7 +78,7 @@ export default function LoadingScreen({ onLoadingComplete }: LoadingScreenProps)
                 <motion.div
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.6, delay: 0.5 }}
+                    transition={{ duration: 0.3, delay: 0.15 }}
                     className="mb-12"
                 >
                     <p className="text-lg md:text-xl text-gray-500">Software Engineer</p>
@@ -89,13 +89,13 @@ export default function LoadingScreen({ onLoadingComplete }: LoadingScreenProps)
                     className="w-64 h-1 bg-gray-800 rounded-full mx-auto overflow-hidden"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    transition={{ delay: 0.4 }}
+                    transition={{ delay: 0.2 }}
                 >
                     <motion.div
                         className="h-full bg-gradient-to-r from-blue-500 to-purple-600 rounded-full"
                         initial={{ width: "0%" }}
                         animate={{ width: "100%" }}
-                        transition={{ duration: 0.8, delay: 0.4, ease: "easeInOut" }}
+                        transition={{ duration: 0.4, delay: 0.2, ease: "easeInOut" }}
                     />
                 </motion.div>
 
